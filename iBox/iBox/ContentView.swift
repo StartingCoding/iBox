@@ -9,9 +9,7 @@
 import SwiftUI
 
 //To-Do List!
-//    - Build a formatDate for timer from 00:00:00 (didSet, willSet)
-//    - Display dinamyc timer date
-//    - Create Start and Stop Timer function
+//✅    - Create Start and Stop Timer function -> https://stackoverflow.com/questions/56504410/how-to-update-text-using-timer-in-swiftui
 //    - Store Starting Date and Final Date
 
 struct ContentView: View {
@@ -20,11 +18,16 @@ struct ContentView: View {
     @State private var notesEvent = ""
     
     // Timer settings
-    @State private var currentDate = Date()
-    @State private var timerDisplay = 0
-    let second = Calendar.current.dateComponents([.second], from: Date()).second!
-    let minute = Calendar.current.dateComponents([.minute], from: Date()).minute!
-    let timer = Timer.publish(every: 1, on: .main, in: .common)
+    @State private var timerIsRunning = false
+    @State private var timer: Timer?
+    
+    @State private var startDate = Date()
+    @State private var stopDate = Date()
+    
+    // Timer Display
+    @State private var seconds = 0
+    @State private var minutes = 0
+    @State private var hours = 0
     
     var body: some View {
         ZStack {
@@ -46,11 +49,7 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Text("m\(minute)" + " : " + "s\(second)")
-                    .onReceive(timer) { input in
-                        self.currentDate = input
-                        self.timerDisplay += 1
-                }
+                Text("\(hours)h : \(minutes)m : \(seconds)s")
                 
                 Spacer()
                 
@@ -63,13 +62,58 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Button("Start") {
-                    self.timer.connect()
+                Button(action: {
+                    self.timerIsRunning.toggle()
+                    self.startTimer()
+                }) {
+                    if timerIsRunning == false {
+                        Text("Start")
+                            .foregroundColor(.green)
+                    } else {
+                        Text("Stop")
+                            .foregroundColor(.red)
+                    }
                 }
                 
                 Spacer()
             }
         }
+    }
+    
+    // The logic of start/stop timer
+    func startTimer() {
+        guard timerIsRunning == true else {
+            timer?.invalidate()
+            
+            self.hours = 0
+            self.minutes = 0
+            self.seconds = 0
+            
+            self.stopDate = Date()
+            
+            return
+        }
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
+            self.startDate = Date()
+            self.ticking()
+        }
+    }
+    
+    // The logic of the time displayed
+    func ticking() {
+        if self.minutes >= 3 && self.seconds >= 3 {
+            self.minutes = 0
+            self.seconds = 0
+            self.hours += 1
+            return
+        } else if self.seconds >= 3 {
+            self.seconds = 0
+            self.minutes += 1
+            return
+        }
+        
+        self.seconds += 1
     }
 }
 
