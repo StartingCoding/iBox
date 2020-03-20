@@ -9,25 +9,23 @@
 import SwiftUI
 
 //To-Do List!
-//✅    - Create Start and Stop Timer function -> https://stackoverflow.com/questions/56504410/how-to-update-text-using-timer-in-swiftui
-//    - Store Starting Date and Final Date
+//  - Find a way to make the timer work even in background (DateInerval, Custom Date to be displayed) -> https://stackoverflow.com/questions/26405079/how-to-run-timer-thought-the-app-entered-background-or-is-terminated
+// - Rework Basic Design
+// - Work with Calendar API (EventKitUI)
 
 struct ContentView: View {
     // Text settings for the event
     @State private var titleEvent = ""
     @State private var notesEvent = ""
     
+    @State private var timerLabel = "00:00"
+    
     // Timer settings
     @State private var timerIsRunning = false
-    @State private var timer: Timer?
+    @State private var timer: Timer!
     
-    @State private var startDate = Date()
-    @State private var stopDate = Date()
-    
-    // Timer Display
-    @State private var seconds = 0
-    @State private var minutes = 0
-    @State private var hours = 0
+    // Some timer in your code which shows the number of seconds
+    @State private var timeRemaining = 20
     
     var body: some View {
         ZStack {
@@ -49,7 +47,7 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Text("\(hours)h : \(minutes)m : \(seconds)s")
+                Text(timerLabel)
                 
                 Spacer()
                 
@@ -82,38 +80,29 @@ struct ContentView: View {
     
     // The logic of start/stop timer
     func startTimer() {
+        // Stop the timer when hitting Stop and reset time to a default setting
         guard timerIsRunning == true else {
-            timer?.invalidate()
-            
-            self.hours = 0
-            self.minutes = 0
-            self.seconds = 0
-            
-            self.stopDate = Date()
-            
+            self.timeRemaining = 20
+            self.timerLabel = "\(self.formattedTime(self.timeRemaining))"
+            timer.invalidate()
             return
         }
         
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
-            self.startDate = Date()
-            self.ticking()
+        timer = Timer.every(1.second) { (timer: Timer) in
+            self.timeRemaining -= 1
+            // Updating timer label outlet. Formated time is another extension provided below for reference.
+            self.timerLabel = "\(self.formattedTime(self.timeRemaining))"
+            // MARK: Timer Done
+            if self.timeRemaining <= 0 {
+                timer.invalidate()
+            }
         }
     }
     
-    // The logic of the time displayed
-    func ticking() {
-        if self.minutes >= 3 && self.seconds >= 3 {
-            self.minutes = 0
-            self.seconds = 0
-            self.hours += 1
-            return
-        } else if self.seconds >= 3 {
-            self.seconds = 0
-            self.minutes += 1
-            return
-        }
-        
-        self.seconds += 1
+    func formattedTime(_ totalSeconds: Int) -> String {
+        let seconds = totalSeconds % 60
+        let minutes = (totalSeconds / 60) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 

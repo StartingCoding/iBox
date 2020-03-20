@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ABA34C6E2424BB460010E5FD /* SwiftyTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA34C6D2424BB460010E5FD /* SwiftyTimer.swift */; };
 		ABDE6BE023ABAA2300543AE6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDE6BDF23ABAA2300543AE6 /* AppDelegate.swift */; };
 		ABDE6BE223ABAA2300543AE6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDE6BE123ABAA2300543AE6 /* SceneDelegate.swift */; };
 		ABDE6BE423ABAA2300543AE6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDE6BE323ABAA2300543AE6 /* ContentView.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ABA34C6D2424BB460010E5FD /* SwiftyTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTimer.swift; sourceTree = "<group>"; };
 		ABDE6BDC23ABAA2300543AE6 /* iBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABDE6BDF23ABAA2300543AE6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ABDE6BE123ABAA2300543AE6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				ABDE6BE323ABAA2300543AE6 /* ContentView.swift */,
 				ABDE6BE523ABAA2500543AE6 /* Assets.xcassets */,
 				ABDE6BEA23ABAA2500543AE6 /* LaunchScreen.storyboard */,
+				ABA34C6D2424BB460010E5FD /* SwiftyTimer.swift */,
 				ABDE6BED23ABAA2500543AE6 /* Info.plist */,
 				ABDE6BE723ABAA2500543AE6 /* Preview Content */,
 			);
@@ -149,6 +152,7 @@
 				ABDE6BE023ABAA2300543AE6 /* AppDelegate.swift in Sources */,
 				ABDE6BE223ABAA2300543AE6 /* SceneDelegate.swift in Sources */,
 				ABDE6BE423ABAA2300543AE6 /* ContentView.swift in Sources */,
+				ABA34C6E2424BB460010E5FD /* SwiftyTimer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
