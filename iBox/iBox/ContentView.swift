@@ -9,7 +9,6 @@
 import SwiftUI
 
 //To-Do List!
-//  - Find a way to make the timer work even in background (DateInerval, Custom Date to be displayed) -> https://stackoverflow.com/questions/26405079/how-to-run-timer-thought-the-app-entered-background-or-is-terminated
 // - Rework Basic Design
 // - Work with Calendar API (EventKitUI)
 
@@ -24,8 +23,14 @@ struct ContentView: View {
     @State private var timerIsRunning = false
     @State private var timer: Timer!
     
+    // Date settings
+    @State private var startDate: Date!
+    @State private var stopDate: Date!
+    @State private var tempTimeElapsed: Date!
+    @State private var tempTimeInterval = 0.0
+    
     // Some timer in your code which shows the number of seconds
-    @State private var timeRemaining = 20
+    @State private var timeElapsed = 0
     
     var body: some View {
         ZStack {
@@ -75,6 +80,12 @@ struct ContentView: View {
                 
                 Spacer()
             }
+        }.onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            if self.timerIsRunning == true {
+                self.tempTimeElapsed = Date()
+                self.tempTimeInterval = self.tempTimeElapsed.timeIntervalSince(self.startDate)
+                self.timeElapsed += Int(self.tempTimeInterval)
+            }
         }
     }
     
@@ -82,18 +93,23 @@ struct ContentView: View {
     func startTimer() {
         // Stop the timer when hitting Stop and reset time to a default setting
         guard timerIsRunning == true else {
-            self.timeRemaining = 20
-            self.timerLabel = "\(self.formattedTime(self.timeRemaining))"
+            self.stopDate = startDate + TimeInterval(timeElapsed)
+            
+            // Reset timer
+            self.timeElapsed = 0
+            self.timerLabel = "\(self.formattedTime(self.timeElapsed))"
             timer.invalidate()
             return
         }
         
+        self.startDate = Date()
+        
         timer = Timer.every(1.second) { (timer: Timer) in
-            self.timeRemaining -= 1
+            self.timeElapsed += 1
             // Updating timer label outlet. Formated time is another extension provided below for reference.
-            self.timerLabel = "\(self.formattedTime(self.timeRemaining))"
+            self.timerLabel = "\(self.formattedTime(self.timeElapsed))"
             // MARK: Timer Done
-            if self.timeRemaining <= 0 {
+            if self.timeElapsed <= 0 {
                 timer.invalidate()
             }
         }
